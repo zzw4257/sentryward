@@ -4,7 +4,7 @@ on:
   pull_request:
     paths-ignore: ['docs/**', 'README.md', 'LICENSE', 'assets/**']
   push:
-    branches: [main]
+    branches: [main, automation-preview-20261023]
     paths-ignore: ['docs/**', 'README.md', 'LICENSE', 'assets/**']
   schedule:
     - cron: '17 4 * * *'
@@ -40,7 +40,7 @@ jobs:
   prepare:
     needs: contracts
     # A disabled repository still permits an explicit, credential-free manual preview.
-    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' || vars.SENTRYWARD_AUTOMATION_ENABLED == 'true'
+    if: github.ref == 'refs/heads/automation-preview-20261023' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' || vars.SENTRYWARD_AUTOMATION_ENABLED == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     outputs:
@@ -59,7 +59,7 @@ jobs:
         id: plan
         env:
           EVIDENCE_URL: ${{ vars.SENTRYWARD_EVIDENCE_URL }}
-          SELECTED_KERNEL: ${{ inputs.kernel }}
+          SELECTED_KERNEL: ${{ inputs.kernel || 'pytorch__aten_MultiMarginLoss__sm_100a' }}
           FORCE: ${{ inputs.force }}
           PUBLISH: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && vars.SENTRYWARD_AUTOMATION_ENABLED == 'true' && (github.event_name != 'workflow_dispatch' || inputs.publish) }}
         run: |
