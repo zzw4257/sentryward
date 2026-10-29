@@ -9,7 +9,7 @@ permissions:
   contents: read
   copilot-requests: write
 engine: claude
-model: copilot/claude-sonnet-4.6
+model: copilot/claude-sonnet-5.5
 max-ai-credits: 50
 max-turns: 8
 timeout-minutes: 10
